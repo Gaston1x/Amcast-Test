@@ -1,0 +1,1792 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SHL Style English Lab</title>
+  <style>
+    :root {
+      --ink: #122b34;
+      --muted: #63777f;
+      --bg: #f3faf7;
+      --panel: rgba(255, 255, 255, .94);
+      --line: rgba(18, 43, 52, .12);
+      --teal: #009c8f;
+      --teal2: #006f72;
+      --mint: #d9f4ee;
+      --aqua: #7fd9cf;
+      --coral: #ff725c;
+      --gold: #f4b844;
+      --nav: #0d5962;
+      --green: #237b5b;
+      --lav: #5867c6;
+      --shadow: 0 22px 60px rgba(15, 67, 72, .14);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 14% 12%, rgba(127, 217, 207, .32), transparent 28%),
+        radial-gradient(circle at 78% 8%, rgba(255, 114, 92, .16), transparent 24%),
+        linear-gradient(135deg, #fbfffd 0%, var(--bg) 50%, #eef8f6 100%);
+      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    button, select, textarea, input { font: inherit; }
+    button { cursor: pointer; }
+
+    #scene {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      opacity: .58;
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 292px minmax(0, 1fr);
+      gap: 0;
+    }
+
+    .rail {
+      background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(245, 253, 250, .92));
+      color: var(--ink);
+      padding: 22px 18px;
+      display: grid;
+      align-content: start;
+      gap: 18px;
+      border-right: 1px solid rgba(0, 111, 114, .12);
+      box-shadow: 10px 0 36px rgba(14, 80, 86, .08);
+      backdrop-filter: blur(14px);
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      color: white;
+      background: linear-gradient(145deg, var(--teal), var(--teal2));
+      box-shadow: 0 12px 26px rgba(0, 156, 143, .28);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .brand small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: .74rem;
+      font-weight: 700;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .stat {
+      border: 1px solid rgba(0, 111, 114, .14);
+      background: linear-gradient(180deg, white, #f8fffd);
+      border-radius: 12px;
+      padding: 10px 8px;
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: .72rem;
+    }
+
+    .stat strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 1.15rem;
+      color: var(--teal2);
+    }
+
+    .rail-group {
+      display: grid;
+      gap: 7px;
+    }
+
+    .nav-btn {
+      min-height: 42px;
+      border: 0;
+      border-radius: 12px;
+      padding: 0 12px;
+      background: transparent;
+      color: #37525b;
+      text-align: left;
+      font-weight: 750;
+    }
+
+    .nav-btn.active {
+      color: var(--teal2);
+      background: linear-gradient(90deg, rgba(0,156,143,.13), rgba(217,244,238,.5));
+      box-shadow: inset 4px 0 0 var(--teal);
+    }
+
+    .rail-note {
+      color: var(--muted);
+      font-size: .82rem;
+      line-height: 1.4;
+      border: 1px solid rgba(0,111,114,.12);
+      background: rgba(217,244,238,.42);
+      border-radius: 14px;
+      padding: 13px;
+    }
+
+    .source-card {
+      display: grid;
+      gap: 8px;
+      border: 1px solid rgba(0,111,114,.14);
+      background: linear-gradient(135deg, rgba(0,156,143,.1), rgba(255,255,255,.82));
+      border-radius: 14px;
+      padding: 13px;
+    }
+
+    .source-card strong {
+      color: var(--teal2);
+      font-size: .9rem;
+    }
+
+    .auth-wrap {
+      position: relative;
+      z-index: 2;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .auth-card {
+      width: min(460px, 100%);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(255,255,255,.94);
+      box-shadow: var(--shadow);
+      padding: 26px;
+      display: grid;
+      gap: 16px;
+      backdrop-filter: blur(14px);
+    }
+
+    .auth-card h1 {
+      margin: 0;
+      font-size: 1.55rem;
+    }
+
+    .auth-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: .84rem;
+      font-weight: 800;
+    }
+
+    .field input {
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0 12px;
+      background: white;
+      color: var(--ink);
+    }
+
+    .auth-actions {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .user-chip {
+      border: 1px solid rgba(0,111,114,.14);
+      border-radius: 14px;
+      background: rgba(217,244,238,.56);
+      padding: 11px 12px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .user-chip strong {
+      color: var(--teal2);
+    }
+
+    .main {
+      min-width: 0;
+      padding: 24px;
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    .topbar {
+      min-height: 92px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background:
+        linear-gradient(135deg, rgba(0, 111, 114, .96), rgba(0, 156, 143, .91)),
+        white;
+      color: white;
+      box-shadow: 0 22px 52px rgba(0, 91, 98, .2);
+      overflow: hidden;
+      position: relative;
+      backdrop-filter: blur(14px);
+    }
+
+    .topbar:after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      top: -90px;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      border: 38px solid rgba(255,255,255,.12);
+      pointer-events: none;
+    }
+
+    .topbar > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .topbar h2 {
+      margin: 0;
+      font-size: 1.26rem;
+    }
+
+    .topbar p {
+      margin: 4px 0 0;
+      color: rgba(255,255,255,.78);
+      font-size: .9rem;
+    }
+
+    .tools {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 9px;
+    }
+
+    .segmented {
+      display: inline-grid;
+      grid-template-columns: repeat(2, minmax(105px, 1fr));
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 12px;
+      overflow: hidden;
+      background: rgba(255,255,255,.12);
+    }
+
+    .segmented button {
+      min-height: 40px;
+      border: 0;
+      background: transparent;
+      color: rgba(255,255,255,.8);
+      font-weight: 850;
+      padding: 0 12px;
+    }
+
+    .segmented button.active {
+      background: white;
+      color: var(--teal2);
+    }
+
+    select, .btn {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      min-height: 40px;
+      background: white;
+      color: var(--ink);
+      padding: 0 12px;
+      font-weight: 740;
+    }
+
+    .btn.primary {
+      border-color: var(--teal);
+      background: linear-gradient(135deg, var(--teal), var(--teal2));
+      color: white;
+      box-shadow: 0 10px 24px rgba(0, 156, 143, .22);
+    }
+
+    .btn.primary:hover { background: var(--teal2); }
+    .btn:disabled { opacity: .52; cursor: not-allowed; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .roadmap {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .part {
+      border: 1px solid rgba(0,111,114,.14);
+      border-radius: 12px;
+      background: rgba(255,255,255,.78);
+      padding: 10px;
+      min-height: 78px;
+      display: grid;
+      align-content: space-between;
+      box-shadow: 0 8px 24px rgba(18,43,52,.06);
+    }
+
+    .part b {
+      color: var(--teal2);
+      font-size: .8rem;
+    }
+
+    .part span {
+      color: var(--muted);
+      font-size: .76rem;
+      line-height: 1.25;
+    }
+
+    .side-card .roadmap {
+      grid-template-columns: 1fr;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .result-tile {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: linear-gradient(180deg, white, rgba(217,244,238,.42));
+      padding: 14px;
+    }
+
+    .result-tile span {
+      display: block;
+      color: var(--muted);
+      font-size: .8rem;
+    }
+
+    .result-tile strong {
+      display: block;
+      margin-top: 4px;
+      color: var(--teal2);
+      font-size: 1.35rem;
+    }
+
+    .rubric-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .rubric-row {
+      display: grid;
+      grid-template-columns: 112px minmax(0, 1fr) 42px;
+      gap: 10px;
+      align-items: center;
+      color: var(--muted);
+      font-size: .84rem;
+    }
+
+    .rubric-bar {
+      height: 8px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #e5efee;
+    }
+
+    .rubric-bar div {
+      height: 100%;
+      background: linear-gradient(90deg, var(--aqua), var(--teal));
+    }
+
+    .part.active {
+      border-color: rgba(0,156,143,.48);
+      background: linear-gradient(135deg, rgba(217,244,238,.9), white);
+      box-shadow: inset 4px 0 0 var(--teal), 0 8px 24px rgba(0,156,143,.12);
+    }
+
+    .card, .side-card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      overflow: hidden;
+    }
+
+    .card-head {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(90deg, rgba(255,255,255,.75), rgba(217,244,238,.58));
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      color: white;
+      background: linear-gradient(135deg, var(--lav), var(--teal));
+      font-weight: 850;
+      font-size: .78rem;
+      box-shadow: 0 8px 18px rgba(88,103,198,.18);
+    }
+
+    .timer {
+      border-radius: 8px;
+      padding: 7px 11px;
+      color: #321910;
+      background: linear-gradient(135deg, #ffd37a, var(--gold));
+      font-weight: 900;
+      min-width: 54px;
+      text-align: center;
+    }
+
+    .prompt {
+      min-height: 305px;
+      padding: 32px;
+      display: grid;
+      align-content: center;
+      gap: 18px;
+      background:
+        radial-gradient(circle at 88% 12%, rgba(0,156,143,.09), transparent 22%),
+        linear-gradient(180deg, rgba(255,255,255,.96), rgba(250,255,253,.92));
+    }
+
+    .sentence {
+      font-size: clamp(1.55rem, 3vw, 2.55rem);
+      line-height: 1.22;
+      font-weight: 850;
+      letter-spacing: 0;
+      max-width: 940px;
+    }
+
+    .blank {
+      display: inline-block;
+      min-width: 120px;
+      border-bottom: 5px solid var(--coral);
+      transform: translateY(-3px);
+    }
+
+    .hint {
+      color: var(--muted);
+      line-height: 1.45;
+      max-width: 850px;
+      font-weight: 650;
+    }
+
+    .shadow-matrix {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .mini {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px;
+      background: linear-gradient(180deg, white, rgba(217,244,238,.36));
+      font-size: .9rem;
+      line-height: 1.36;
+    }
+
+    .mini strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ink);
+    }
+
+    .actions, .answer {
+      border-top: 1px solid var(--line);
+      padding: 15px 16px;
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+      background: rgba(250,255,253,.74);
+    }
+
+    .answer {
+      display: grid;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 112px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      color: var(--ink);
+      line-height: 1.45;
+      background: white;
+      box-shadow: inset 0 1px 0 rgba(0,0,0,.02);
+    }
+
+    .feedback {
+      border-top: 1px solid var(--line);
+      padding: 16px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .feedback h3, .side-card h3 {
+      margin: 0;
+      font-size: .96rem;
+    }
+
+    .line {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 11px 12px;
+      background: rgba(255,255,255,.82);
+      line-height: 1.42;
+    }
+
+    .line.good { border-color: rgba(40,124,83,.32); background: rgba(40,124,83,.08); }
+    .line.warn { border-color: rgba(200,149,45,.36); background: rgba(200,149,45,.11); }
+    .line.bad { border-color: rgba(212,91,76,.36); background: rgba(212,91,76,.1); }
+
+    .side {
+      display: grid;
+      gap: 14px;
+    }
+
+    .side-card {
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 9px;
+      color: var(--teal2);
+      background: rgba(217,244,238,.7);
+      font-size: .8rem;
+      font-weight: 800;
+    }
+
+    .meter {
+      height: 9px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #e5efee;
+    }
+
+    .meter div {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--coral), var(--gold), var(--teal));
+      transition: width .28s ease;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: .86rem;
+      line-height: 1.45;
+    }
+
+    .chat {
+      min-height: 620px;
+      display: grid;
+      grid-template-rows: auto minmax(290px, 1fr) auto;
+      overflow: hidden;
+    }
+
+    .case-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .log {
+      padding: 18px;
+      display: grid;
+      align-content: start;
+      gap: 12px;
+      overflow: auto;
+      background:
+        linear-gradient(180deg, rgba(248,255,252,.86), rgba(238,248,246,.68));
+    }
+
+    .bubble {
+      max-width: min(760px, 92%);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      line-height: 1.45;
+      background: white;
+      box-shadow: 0 8px 24px rgba(18,43,52,.06);
+    }
+
+    .bubble.agent {
+      justify-self: end;
+      color: #083f43;
+      background: linear-gradient(135deg, rgba(217,244,238,.94), rgba(127,217,207,.38));
+      border-color: rgba(0,156,143,.24);
+    }
+
+    .bubble.coach {
+      border-color: rgba(200,149,45,.4);
+      background: rgba(200,149,45,.12);
+    }
+
+    @media (max-width: 1040px) {
+      .shell { grid-template-columns: 1fr; }
+      .rail { position: static; }
+      .layout { grid-template-columns: 1fr; }
+      .roadmap { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .rail-group { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 700px) {
+      .main { padding: 14px; }
+      .topbar { align-items: stretch; flex-direction: column; }
+      .tools { justify-content: stretch; }
+      .segmented, select, .btn { flex: 1 1 150px; }
+      .prompt { padding: 20px 16px; min-height: 260px; }
+      .sentence { font-size: 1.38rem; }
+      .shadow-matrix, .rail-group, .stats, .roadmap { grid-template-columns: 1fr; }
+      .result-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="scene"></canvas>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+  <script>
+    const e = React.createElement;
+    const { useEffect, useMemo, useRef, useState } = React;
+
+    const modes = [
+      { id: "amcat", label: "AMCAT sequence", sub: "Seven-part voice test path inspired by the reference video.", chips: ["A-G parts", "timed", "voice test"] },
+      { id: "mixed", label: "Mixed test", sub: "Adaptive mix: missing word, grammar correction, shadowing and free speech.", chips: ["adaptive", "grammar", "listening", "speaking"] },
+      { id: "shortq", label: "Short questions", sub: "Listen to a short story, then answer in full sentence form.", chips: ["Part A", "memory", "15 sec"] },
+      { id: "convq", label: "Conversation", sub: "Listen to a situation/dialogue and answer naturally.", chips: ["Part B", "dialogue", "12 sec"] },
+      { id: "read", label: "Read & speak", sub: "Read the text aloud with clarity, punctuation and pace.", chips: ["Part C", "reading", "clarity"] },
+      { id: "blank", label: "Missing word", sub: "Complete the sentence with the most natural word.", chips: ["context", "vocabulary", "collocations"] },
+      { id: "correct", label: "Sentence correction", sub: "Fix the grammar and say the correct version.", chips: ["accuracy", "tense", "word order"] },
+      { id: "shadow", label: "Listen & repeat", sub: "Repeat with accurate rhythm, stress, linking and clear sounds.", chips: ["Part D", "accent", "intonation"] },
+      { id: "free", label: "Quick response", sub: "Answer clearly under time pressure.", chips: ["fluency", "structure", "confidence"] }
+    ];
+
+    const amcatParts = [
+      ["A", "Short questions", "Story + 3 answers"],
+      ["B", "Conversation", "Situation + dialogue"],
+      ["C", "Read & speak", "Read aloud"],
+      ["D", "Listen & repeat", "Repeat exactly"],
+      ["E", "Fill blanks", "Best missing word"],
+      ["F", "Complete sentence", "Finish naturally"],
+      ["G", "Free speech", "Structured answer"]
+    ];
+
+    const dimensionLabels = {
+      activeListening: "Escucha",
+      fluency: "Fluidez",
+      pronunciation: "Pronunciacion",
+      grammar: "Gramatica",
+      vocabulary: "Vocabulario",
+      structure: "Estructura"
+    };
+
+    const rubricByType = {
+      shortq: { activeListening: 40, structure: 25, grammar: 20, pronunciation: 15 },
+      convq: { activeListening: 45, structure: 20, grammar: 20, pronunciation: 15 },
+      read: { pronunciation: 40, fluency: 35, activeListening: 15, grammar: 10 },
+      shadow: { pronunciation: 40, activeListening: 35, fluency: 25 },
+      blank: { vocabulary: 45, grammar: 30, activeListening: 15, fluency: 10 },
+      correct: { grammar: 55, structure: 25, fluency: 10, pronunciation: 10 },
+      free: { fluency: 30, structure: 25, grammar: 20, pronunciation: 15, vocabulary: 10 }
+    };
+
+    const questions = {
+      shortq: [
+        ["easy","story memory","Story: Your name is Maria. You are 28 years old. You enjoy cooking and usually cook dinner after work. Question: How old are you?","I am 28 years old.","Answer in a complete sentence, not one word."],
+        ["easy","story memory","Story: David works at a bookstore. He starts work at 9 a.m. and helps customers find books. Question: Where does David work?","David works at a bookstore.","Use the subject from the question."],
+        ["easy","story memory","Story: Ana missed the bus because she woke up late. She called her manager to explain the delay. Question: Why did Ana miss the bus?","Ana missed the bus because she woke up late.","Use because for the reason."],
+        ["medium","story memory","Story: Kevin ordered a blue backpack online, but the store delivered a black one. He contacted support to request an exchange. Question: What color backpack did Kevin order?","Kevin ordered a blue backpack.","Keep it short but complete."],
+        ["medium","story memory","Story: Lisa has a dentist appointment on Friday morning. She moved her team meeting to the afternoon. Question: When is Lisa's dentist appointment?","Lisa's dentist appointment is on Friday morning.","Use is on for schedule."],
+        ["medium","story memory","Story: A customer lost his wallet at the airport. He reported it to security and cancelled his cards. Question: What did the customer cancel?","The customer cancelled his cards.","Use past tense."],
+        ["hard","story memory","Story: Nina received a message about suspicious activity on her account. She changed her password and enabled two-factor authentication. Question: What security step did Nina enable?","Nina enabled two-factor authentication.","Say the key phrase clearly."],
+        ["hard","story memory","Story: The airline delayed the flight due to severe weather. Passengers received food vouchers and updated departure information. Question: Why was the flight delayed?","The flight was delayed due to severe weather.","Use due to or because of."]
+      ],
+      convq: [
+        ["easy","conversation","Situation: A customer calls a bank. Customer: I lost my card this morning. Agent: I can help you block it after verifying your identity. Question: What does the customer want to do?","The customer wants to block the lost card.","Answer from the customer's goal."],
+        ["easy","conversation","Situation: Two coworkers discuss a meeting. Anna: The meeting starts at 3 p.m. Mark: I will join five minutes early. Question: What time does the meeting start?","The meeting starts at 3 p.m.","Use starts, not start."],
+        ["medium","conversation","Situation: A traveler speaks to airline support. Traveler: My suitcase did not arrive. Agent: Please give me your flight number and baggage tag. Question: What information does the agent request?","The agent requests the flight number and baggage tag.","Mention both pieces of information."],
+        ["medium","conversation","Situation: A customer reports a login issue. Customer: I reset my password, but I still cannot access the account. Agent: I will check if the account is locked. Question: What problem does the customer still have?","The customer still cannot access the account.","Use still for continued problem."],
+        ["hard","conversation","Situation: A patient calls a clinic. Patient: I need to reschedule because I have a work emergency. Receptionist: We have an opening tomorrow at 10. Question: Why does the patient need to reschedule?","The patient needs to reschedule because of a work emergency.","Use because of for reason."],
+        ["hard","conversation","Situation: A guest contacts a hotel. Guest: I booked a non-smoking room, but the room smells like smoke. Agent: I can move you to another room. Question: What solution does the agent offer?","The agent offers to move the guest to another room.","Use offers to + verb."]
+      ],
+      read: [
+        ["easy","read aloud","Please confirm your full name and date of birth before we continue.","Please confirm your full name and date of birth before we continue.","Read steadily. Pause after name."],
+        ["easy","read aloud","The customer service desk is open from eight in the morning until six in the evening.","The customer service desk is open from eight in the morning until six in the evening.","Keep numbers clear."],
+        ["medium","read aloud","For security reasons, we cannot process this request without verifying your account information.","For security reasons, we cannot process this request without verifying your account information.","Pause after reasons."],
+        ["medium","read aloud","Your baggage claim has been created, and you will receive an update within forty-eight hours.","Your baggage claim has been created, and you will receive an update within forty-eight hours.","Stress claim and update."],
+        ["hard","read aloud","If you notice any unauthorized transactions, please contact us immediately so we can investigate the issue.","If you notice any unauthorized transactions, please contact us immediately so we can investigate the issue.","Do not rush long words."],
+        ["hard","read aloud","The replacement card will be delivered to your registered address within five to seven business days.","The replacement card will be delivered to your registered address within five to seven business days.","Link delivered_to and address_within."]
+      ],
+      blank: [
+        ["easy","daily life","I forgot my lunch, so I bought a sandwich from the ____ nearby.","cafeteria","Place where people buy food at work or school."],
+        ["easy","travel","The hotel room was ready, so we were able to ____ in early.","check","Phrase: check in."],
+        ["easy","health","After running for ten minutes, I needed to take a short ____.","break","Short rest."],
+        ["easy","office","The printer is out of paper, so please ____ the tray.","refill","Put more paper in it."],
+        ["easy","shopping","The jacket was too small, so I asked for a different ____.","size","Clothing measurement."],
+        ["easy","banking","I forgot my PIN, so I could not ____ cash from the ATM.","withdraw","Take money out."],
+        ["easy","transport","The driver stopped because the traffic light turned ____.","red","Color that means stop."],
+        ["easy","home","The power went out, so we used a ____ to see in the dark.","flashlight","Portable light."],
+        ["easy","weather","It was very windy, so the umbrella turned inside ____.","out","Phrase: inside out."],
+        ["easy","communication","I could not hear the caller, so I asked them to speak more ____.","loudly","Adverb for higher volume."],
+        ["medium","service","The agent apologized for the ____ and offered a faster solution.","inconvenience","Formal word for trouble caused."],
+        ["medium","work","The supervisor asked everyone to ____ the new attendance policy.","follow","Obey a rule or process."],
+        ["medium","technology","The file was too large, so I had to ____ it before sending it.","compress","Make a file smaller."],
+        ["medium","travel","The passenger missed the connection because the first flight was ____.","delayed","Late."],
+        ["medium","banking","The account was locked after several failed login ____.","attempts","Tries."],
+        ["medium","health","The nurse asked the patient to describe the ____ of the pain.","location","Where something is."],
+        ["medium","education","The instructor gave clear ____ before the exam started.","instructions","Directions."],
+        ["medium","business","The client requested a written ____ of the agreement.","summary","Short version of main points."],
+        ["medium","support","The issue was urgent, so the agent marked the ticket as high ____.","priority","Importance level."],
+        ["medium","airport","The passenger went to the counter to report ____ luggage.","missing","Not found or not arrived."],
+        ["medium","customer care","The customer asked for a refund because the product was ____.","damaged","Broken or harmed."],
+        ["medium","security","For safety reasons, never share your password with ____.","anyone","No person."],
+        ["medium","scheduling","The appointment is available on Tuesday, but that time is not ____.","convenient","Easy or suitable."],
+        ["medium","news","The update was important, so the company sent an official ____.","announcement","Public message."],
+        ["hard","service","The agent used a calm tone to ____ the customer's frustration.","de-escalate","Reduce tension."],
+        ["hard","finance","The bank placed a temporary ____ on the card after unusual activity.","restriction","Limit."],
+        ["hard","technology","The website requires users to ____ their email before activating the account.","verify","Confirm as true."],
+        ["hard","business","The team created a backup plan to ____ possible delays.","anticipate","Expect in advance."],
+        ["hard","travel","The airline will ____ passengers if the delay was caused by an operational issue.","compensate","Give something for a problem."],
+        ["hard","work","The manager asked for more data to make an informed ____.","decision","Choice based on information."],
+        ["hard","support","The customer needed proof of purchase to validate the ____.","warranty","Product protection period."],
+        ["hard","communication","The message was polite, but the main point was not very ____.","clear","Easy to understand."],
+        ["hard","medical","The clinic recommended a follow-up visit to ____ the patient's progress.","monitor","Check over time."],
+        ["hard","airport","The baggage team opened an investigation to ____ the missing suitcase.","locate","Find."],
+        ["hard","legal","The policy cannot be changed without written ____ from both parties.","consent","Permission."],
+        ["hard","employment","The applicant was asked to provide ____ of previous work experience.","evidence","Proof."],
+        ["hard","service","The representative confirmed the details to avoid any ____.","misunderstanding","Confusion."],
+        ["hard","operations","The process was updated to reduce errors and improve ____.","accuracy","Correctness."],
+        ["hard","interview","The candidate gave a specific example to ____ her problem-solving skills.","demonstrate","Show clearly."],
+        ["hard","security","The system flagged the login because it came from an unfamiliar ____.","device","Computer or phone used to access."],
+        ["hard","quality","The final report was returned because it lacked enough ____.","detail","Specific information."]
+      ],
+      correct: [
+        ["easy","grammar","My sister work at a pharmacy.","My sister works at a pharmacy.","Third person singular needs -s."],
+        ["easy","daily life","I didn't saw the message yesterday.","I didn't see the message yesterday.","After did, use base verb."],
+        ["easy","service","The customer need help with the account.","The customer needs help with the account.","Singular subject needs -s."],
+        ["easy","travel","We was late for the flight.","We were late for the flight.","Use were with we."],
+        ["easy","home","The keys is on the table.","The keys are on the table.","Keys is plural."],
+        ["easy","school","I have a exam tomorrow.","I have an exam tomorrow.","Use an before vowel sound."],
+        ["easy","work","She is very responsibly at work.","She is very responsible at work.","Use adjective, not adverb."],
+        ["medium","support","The agent helped to the customer reset the password.","The agent helped the customer reset the password.","Help someone do something."],
+        ["medium","banking","I want report a suspicious transaction.","I want to report a suspicious transaction.","Want to + verb."],
+        ["medium","travel","The passenger asked where was the gate.","The passenger asked where the gate was.","Indirect question word order."],
+        ["medium","technology","I cannot login because the system don't accept my code.","I cannot log in because the system doesn't accept my code.","Use log in as verb and doesn't."],
+        ["medium","communication","Please send me the informations by email.","Please send me the information by email.","Information is uncountable."],
+        ["medium","service","I will transfer you with the billing department.","I will transfer you to the billing department.","Transfer someone to a department."],
+        ["medium","health","The doctor told me drink more water.","The doctor told me to drink more water.","Told me to + verb."],
+        ["medium","office","The report must to be submitted today.","The report must be submitted today.","Modal + base verb."],
+        ["medium","airport","My suitcase didn't arrived at the airport.","My suitcase didn't arrive at the airport.","After didn't, use base verb."],
+        ["medium","grammar","It depends of the situation.","It depends on the situation.","Depends on."],
+        ["medium","work","I am working here since two years.","I have been working here for two years.","Use present perfect continuous with for."],
+        ["hard","service","The customer insisted to receive an immediate refund.","The customer insisted on receiving an immediate refund.","Insist on + gerund."],
+        ["hard","business","The meeting was cancelled, that caused confusion.","The meeting was cancelled, which caused confusion.","Use which for the clause."],
+        ["hard","banking","If the card was lost, we would blocked it immediately.","If the card was lost, we would block it immediately.","Would + base verb."],
+        ["hard","technology","The user was unable accessing the portal.","The user was unable to access the portal.","Unable to + verb."],
+        ["hard","travel","The airline provided us with a update about the delay.","The airline provided us with an update about the delay.","Use an before update."],
+        ["hard","support","The issue has resolved by the technical team.","The issue has been resolved by the technical team.","Passive voice needs has been."],
+        ["hard","communication","I appreciate you to contact us today.","I appreciate you contacting us today.","Appreciate + gerund."],
+        ["hard","interview","I am used to work under pressure.","I am used to working under pressure.","Used to + gerund when meaning accustomed."],
+        ["hard","service","The representative apologized because the long waiting time.","The representative apologized because of the long waiting time.","Because of + noun phrase."],
+        ["hard","business","Neither the manager or the assistant was available.","Neither the manager nor the assistant was available.","Neither...nor."],
+        ["hard","airport","The claim can process after the passenger submits the baggage tag.","The claim can be processed after the passenger submits the baggage tag.","Passive: can be processed."],
+        ["hard","grammar","The client asked that when will the payment be posted.","The client asked when the payment would be posted.","Indirect question and tense shift."],
+        ["hard","work","I would rather to speak with a supervisor.","I would rather speak with a supervisor.","Would rather + base verb."],
+        ["hard","service","The customer was frustrating because the package was late.","The customer was frustrated because the package was late.","Use frustrated for feeling."],
+        ["hard","technology","Before to restart the computer, save your files.","Before restarting the computer, save your files.","Before + gerund."],
+        ["hard","finance","The transaction was decline by the bank.","The transaction was declined by the bank.","Past participle in passive."],
+        ["hard","conversation","She asked me if do I have the reference number.","She asked me if I had the reference number.","Indirect yes/no question."],
+        ["hard","operations","The process is designed for reduce errors.","The process is designed to reduce errors.","Designed to + verb."],
+        ["hard","support","We are investigating about the problem now.","We are investigating the problem now.","Investigate takes a direct object."],
+        ["hard","grammar","The customer has been waiting since three hours.","The customer has been waiting for three hours.","Use for with duration."],
+        ["hard","service","I can assure to you that we will follow up.","I can assure you that we will follow up.","Assure someone."],
+        ["hard","business","The update will affect to all users.","The update will affect all users.","Affect takes a direct object."]
+      ],
+      shadow: [
+        ["easy","daily life","I need a little more time to finish this.","I need a little more time to finish this.","Chunk: I need / a little more time / to finish this.",["need","little","more","time","finish"],["need a","time to","finish this"],["final d in need","short i in finish","clear th in this"]],
+        ["easy","travel","Could you tell me where the nearest station is?","Could you tell me where the nearest station is?","Smooth polite question; fall at the end.",["tell","where","nearest","station"],["could you","tell me","station is"],["soft d in could you","st in station","z sound in is"]],
+        ["medium","work","The meeting has been moved to Thursday afternoon.","The meeting has been moved to Thursday afternoon.","Chunk: The meeting / has been moved / to Thursday afternoon.",["meeting","moved","Thursday","afternoon"],["has been","moved to","Thursday afternoon"],["v in moved","th in Thursday","final d in moved"]],
+        ["medium","technology","I couldn't access the file because the link expired.","I couldn't access the file because the link expired.","Reduce because lightly; keep expired clear.",["couldn't","access","file","link","expired"],["couldn't access","file because","link expired"],["ks in access","final k in link","xp in expired"]],
+        ["medium","service","For your security, I need to verify your identity first.","For your security, I need to verify your identity first.","Professional tone: calm, clear, and firm.",["security","verify","identity","first"],["need to","verify your","identity first"],["v in verify","th in identity","final t in first"]],
+        ["medium","travel","I can help you file a claim for the missing baggage.","I can help you file a claim for the missing baggage.","Chunk by action: help you / file a claim / missing baggage.",["help","file","claim","missing","baggage"],["help you","file a","claim for"],["g in baggage","clear m in missing","final p in help"]],
+        ["hard","business","We should prioritize the most urgent requests first.","We should prioritize the most urgent requests first.","Do not rush prioritize; land on requests first.",["prioritize","urgent","requests","first"],["should prioritize","most urgent","requests first"],["z in prioritize","r in urgent","final sts in requests"]],
+        ["hard","science","The experiment produced unexpected but useful results.","The experiment produced unexpected but useful results.","Keep final consonants clear.",["experiment","produced","unexpected","useful","results"],["produced unexpected","but useful","useful results"],["final t in unexpected","zd in produced","sults in results"]],
+        ["hard","interview","I stay calm under pressure and focus on solving the problem.","I stay calm under pressure and focus on solving the problem.","Chunk: stay calm / under pressure / focus on solving.",["stay","calm","pressure","focus","solving","problem"],["calm under","pressure and","focus on"],["light l in calm","v in solving","th in the"]],
+        ["hard","banking","I will block the card now and send you a confirmation number.","I will block the card now and send you a confirmation number.","Clear action plus confirmation.",["block","card","send","confirmation","number"],["will block","card now","send you"],["final k in block","r in card","sh in confirmation"]]
+      ],
+      free: [
+        ["easy","daily life","What do you usually do after work or school?","","Use 2 or 3 sentences. Start with Usually."],
+        ["easy","travel","Describe a place you would like to visit.","","Say where, why, and what you would do there."],
+        ["medium","work","Tell me about a time you learned something difficult.","","Use past tense: situation, action, result."],
+        ["medium","technology","How has technology changed the way people communicate?","","Mention one benefit and one challenge."],
+        ["medium","health","What habits help people stay healthy?","","Use examples: sleep, food, exercise, stress."],
+        ["hard","business","Should companies allow employees to work from home?","","Give an opinion, reason, and example."],
+        ["hard","society","What is one problem in your city, and how could it be solved?","","Use could, should, and examples."],
+        ["hard","service","How would you calm down an upset customer?","","Use empathy, action, and confirmation."]
+      ]
+    };
+
+    const chatCases = {
+      card: {
+        title: "Card block request",
+        subtitle: "Lost card, urgent block, security verification.",
+        checklist: ["Greet and acknowledge", "Empathize", "Verify identity safely", "Block card", "Confirm next step"],
+        phrases: ["I am sorry this happened.", "For your security, I can help block the card.", "May I verify your identity first?", "I will not ask for your PIN.", "Your card has been blocked successfully."],
+        steps: [
+          ["Hi, I lost my debit card this morning and I need to block it immediately.", ["sorry|understand|help", "block|freeze|secure", "verify|confirm|identity"], "Good. The customer feels acknowledged. Now verify safely.", "Use empathy, say you can block or secure the card, and ask to verify identity."],
+          ["Sure. My name is Daniel Brooks. What information do you need from me?", ["date of birth|dob|address|phone|security", "not ask|never ask|pin|full card"], "Good verification language. Now explain the action.", "Ask for safe verification and mention you will not ask for PIN or full card number."],
+          ["My date of birth is May 14, 1989, and the phone number on the account is 555-0184.", ["blocked|block|freeze", "replacement|new card|send", "case|reference|confirmation"], "Strong resolution. Close by confirming anything else.", "Say the card is blocked, mention replacement or next step, and give confirmation/reference."],
+          ["Thank you. Is there anything else I should do?", ["monitor|transactions|activity", "anything else|assist|help", "thank"], "Case complete. You handled security, empathy, and closure.", "Advise monitoring transactions, ask if they need anything else, and close politely."]
+        ]
+      },
+      baggage: {
+        title: "Baggage claim",
+        subtitle: "Passenger lost suitcase after travel and needs a claim.",
+        checklist: ["Acknowledge loss", "Collect flight/tag", "Describe baggage", "Create claim", "Set follow-up"],
+        phrases: ["I am sorry your baggage did not arrive.", "I can help you file a claim.", "May I have your flight number and baggage tag?", "We will contact you with updates.", "Please keep your reference number."],
+        steps: [
+          ["Hello, I just arrived from a trip and my suitcase is missing. I need to file a claim.", ["sorry|understand", "claim|report|file", "flight|tag|baggage|details"], "Good opening. Now gather travel details.", "Show empathy, say you can file a claim, and ask for flight or baggage tag details."],
+          ["The flight was 284 from Miami, and the baggage tag ends in 7392.", ["description|color|size|brand|contents", "contact|phone|email", "address|delivery"], "Good. The claim has enough detail to continue.", "Ask for suitcase description and contact or delivery information."],
+          ["It is a medium black suitcase with a blue ribbon. My phone number is 555-4472.", ["claim|report|reference", "update|contact|notify", "24|48|hours|time"], "Good resolution. Now close with reassurance.", "Create the claim, give a reference or next step, and set a follow-up timeframe."],
+          ["Okay. I am worried because I have important things inside.", ["understand|sorry|concern", "priority|do our best|track", "anything else|help"], "Case complete. You showed empathy and process control.", "Acknowledge concern, reassure tracking, and ask if anything else is needed."]
+        ]
+      }
+    };
+
+    function contentId(type, text, answer) {
+      const source = `${type}|${text}|${answer}`;
+      let hash = 0;
+      for (let i = 0; i < source.length; i += 1) {
+        hash = ((hash << 5) - hash + source.charCodeAt(i)) | 0;
+      }
+      return `${type}-${Math.abs(hash).toString(36)}`;
+    }
+
+    function itemize(type, raw) {
+      return raw.map(row => ({ type, id: contentId(type, row[2], row[3]), level: row[0], topic: row[1], text: row[2], answer: row[3], hint: row[4], stress: row[5] || [], linking: row[6] || [], sounds: row[7] || [] }));
+    }
+
+    const bank = Object.fromEntries(Object.entries(questions).map(([type, rows]) => [type, itemize(type, rows)]));
+
+    const ACCOUNTS_KEY = "amcatLab.accounts.v1";
+    const ACTIVE_USER_KEY = "amcatLab.activeUser.v1";
+
+    function loadAccounts() {
+      try {
+        return JSON.parse(localStorage.getItem(ACCOUNTS_KEY) || "{}");
+      } catch {
+        return {};
+      }
+    }
+
+    function saveAccounts(accounts) {
+      localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+    }
+
+    function cleanUsername(name) {
+      return String(name || "").trim().toLowerCase().replace(/\s+/g, "_");
+    }
+
+    function normalize(text) {
+      return String(text || "").toLowerCase().replace(/[.,!?;:'"()]/g, "").replace(/\s+/g, " ").trim();
+    }
+
+    function similarity(a, b) {
+      const aa = normalize(a).split(" ").filter(Boolean);
+      const bb = normalize(b).split(" ").filter(Boolean);
+      if (!aa.length || !bb.length) return 0;
+      const setB = new Set(bb);
+      const common = aa.filter(word => setB.has(word)).length;
+      return Math.round((common / Math.max(aa.length, bb.length)) * 100);
+    }
+
+    function speak(text, accent, rate) {
+      if (!("speechSynthesis" in window)) return;
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = accent;
+      u.rate = Number(rate);
+      u.pitch = 1;
+      speechSynthesis.speak(u);
+    }
+
+    function useMic(accent, setStatus) {
+      const recognitionRef = useRef(null);
+      const [recording, setRecording] = useState(false);
+
+      async function ensureMic() {
+        if (!navigator.mediaDevices?.getUserMedia) {
+          setStatus("Microfono: este navegador no expone getUserMedia. Prueba en Chrome.");
+          return false;
+        }
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          stream.getTracks().forEach(track => track.stop());
+          setStatus("Microfono: permiso concedido. Habla cerca del micro y evita ruido de fondo.");
+          return true;
+        } catch {
+          setStatus("Microfono: permiso bloqueado o dispositivo no disponible.");
+          return false;
+        }
+      }
+
+      async function start(setText, continuous = false) {
+        if (!(await ensureMic())) return;
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+          setStatus("Reconocimiento de voz no disponible aqui. Abre esta pagina en Google Chrome.");
+          return;
+        }
+        if (recognitionRef.current) {
+          try { recognitionRef.current.stop(); } catch {}
+        }
+        let finalText = "";
+        setText("");
+        const rec = new SpeechRecognition();
+        recognitionRef.current = rec;
+        rec.lang = accent;
+        rec.interimResults = true;
+        rec.continuous = continuous;
+        rec.maxAlternatives = 3;
+        rec.onresult = event => {
+          let interim = "";
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            const result = event.results[i];
+            if (result.isFinal) finalText += `${result[0].transcript} `;
+            else interim += result[0].transcript;
+          }
+          setText(`${finalText}${interim}`.trim());
+          const confidence = event.results[event.results.length - 1]?.[0]?.confidence;
+          setStatus(confidence ? `Escuchando... confianza aproximada ${(confidence * 100).toFixed(0)}%.` : "Escuchando... termina la frase completa.");
+        };
+        rec.onerror = event => setStatus(`Reconocimiento de voz: ${event.error}. Si falla, prueba Chrome.`);
+        rec.onend = () => {
+          setRecording(false);
+          setStatus("Grabacion detenida. Revisa la transcripcion antes de revisar o enviar.");
+        };
+        rec.start();
+        setRecording(true);
+        setStatus("Escuchando...");
+      }
+
+      function stop() {
+        if (recognitionRef.current) recognitionRef.current.stop();
+      }
+
+      return { recording, start, stop, ensureMic };
+    }
+
+    function ThreeScene() {
+      useEffect(() => {
+        if (!window.THREE) return;
+        const canvas = document.getElementById("scene");
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(55, innerWidth / innerHeight, .1, 100);
+        camera.position.set(0, 0, 18);
+        const group = new THREE.Group();
+        scene.add(group);
+
+        const materialA = new THREE.MeshStandardMaterial({ color: 0x7fd9cf, metalness: .08, roughness: .5, transparent: true, opacity: .62 });
+        const materialB = new THREE.MeshStandardMaterial({ color: 0xff725c, metalness: .08, roughness: .56, transparent: true, opacity: .5 });
+        const materialC = new THREE.MeshStandardMaterial({ color: 0xf4b844, metalness: .08, roughness: .5, transparent: true, opacity: .55 });
+        const materialD = new THREE.MeshStandardMaterial({ color: 0x5867c6, metalness: .08, roughness: .5, transparent: true, opacity: .36 });
+        const sphere = new THREE.SphereGeometry(.62, 32, 32);
+        const torus = new THREE.TorusGeometry(.78, .12, 16, 52);
+        const capsule = new THREE.CapsuleGeometry(.28, .9, 8, 16);
+        const geos = [sphere, torus, capsule];
+        const mats = [materialA, materialB, materialC, materialD];
+        for (let i = 0; i < 34; i++) {
+          const mesh = new THREE.Mesh(geos[i % geos.length], mats[i % mats.length]);
+          const angle = i * .74;
+          const radius = 5 + (i % 8) * .72;
+          const x = Math.cos(angle) * radius + (i % 3 === 0 ? 8 : -3);
+          const y = Math.sin(angle) * radius * .42 + (i % 2 ? 2.6 : -1.3);
+          mesh.position.set(x, y, -7 - (i % 7) * 1.55);
+          mesh.rotation.set(i * .18, i * .27, i * .11);
+          mesh.scale.setScalar(.58 + (i % 5) * .08);
+          group.add(mesh);
+        }
+        scene.add(new THREE.AmbientLight(0xffffff, .75));
+        const light = new THREE.DirectionalLight(0xffffff, 1.2);
+        light.position.set(3, 8, 8);
+        scene.add(light);
+
+        function resize() {
+          renderer.setSize(innerWidth, innerHeight, false);
+          renderer.setPixelRatio(Math.min(devicePixelRatio, 1.8));
+          camera.aspect = innerWidth / innerHeight;
+          camera.updateProjectionMatrix();
+        }
+        resize();
+        addEventListener("resize", resize);
+        let frame;
+        function animate(t) {
+          group.rotation.y = t * .00005;
+          group.rotation.x = Math.sin(t * .00012) * .055;
+          group.children.forEach((mesh, i) => {
+            mesh.rotation.x += .0018 + i * .000006;
+            mesh.rotation.y += .0024;
+          });
+          renderer.render(scene, camera);
+          frame = requestAnimationFrame(animate);
+        }
+        animate(0);
+        return () => {
+          cancelAnimationFrame(frame);
+          removeEventListener("resize", resize);
+          renderer.dispose();
+          sphere.dispose();
+          torus.dispose();
+          capsule.dispose();
+          materialA.dispose();
+          materialB.dispose();
+          materialC.dispose();
+          materialD.dispose();
+        };
+      }, []);
+      return null;
+    }
+
+    function App() {
+      const [flow, setFlow] = useState("speaking");
+      const [mode, setMode] = useState("amcat");
+      const [level, setLevel] = useState("medium");
+      const [accent, setAccent] = useState("en-US");
+      const [rate, setRate] = useState(.85);
+      const [current, setCurrent] = useState(null);
+      const [answer, setAnswer] = useState("");
+      const [feedback, setFeedback] = useState([{ type: "", text: "Presiona Nueva ronda para empezar." }]);
+      const [score, setScore] = useState(0);
+      const [status, setStatus] = useState("Microfono: pendiente de probar.");
+      const [time, setTime] = useState(45);
+      const [stats, setStats] = useState({ rounds: 0, wins: 0, streak: 0 });
+      const [caseId, setCaseId] = useState("card");
+      const [step, setStep] = useState(0);
+      const [chatInput, setChatInput] = useState("");
+      const [chatLog, setChatLog] = useState([]);
+      const [chatScore, setChatScore] = useState(0);
+      const [chatDecision, setChatDecision] = useState("La IA decide si avanzar, repetir o pedir detalle.");
+      const [amcatTest, setAmcatTest] = useState({ active: false, complete: false, index: 0, plan: [], results: [] });
+      const [accounts, setAccounts] = useState(loadAccounts);
+      const [currentUser, setCurrentUser] = useState(localStorage.getItem(ACTIVE_USER_KEY) || "");
+      const [authMode, setAuthMode] = useState("login");
+      const [authName, setAuthName] = useState("");
+      const [authPass, setAuthPass] = useState("");
+      const [authMessage, setAuthMessage] = useState("");
+      const mic = useMic(accent, setStatus);
+
+      const activeMode = modes.find(m => m.id === mode) || modes[0];
+      const activeCase = chatCases[caseId];
+      const userAccount = currentUser ? accounts[currentUser] : null;
+      const usedIds = new Set(userAccount?.usedQuestionIds || []);
+
+      function persistAccounts(nextAccounts) {
+        setAccounts(nextAccounts);
+        saveAccounts(nextAccounts);
+      }
+
+      function markQuestionsUsed(items) {
+        if (!currentUser || !items.length) return;
+        const ids = items.map(item => item?.id).filter(Boolean);
+        if (!ids.length) return;
+        const account = accounts[currentUser] || { password: "", usedQuestionIds: [] };
+        const merged = Array.from(new Set([...(account.usedQuestionIds || []), ...ids]));
+        persistAccounts({ ...accounts, [currentUser]: { ...account, usedQuestionIds: merged } });
+      }
+
+      function handleAuth(modeOverride = authMode) {
+        const username = cleanUsername(authName);
+        if (!username || !authPass) {
+          setAuthMessage("Ingresa usuario y password.");
+          return;
+        }
+        if (modeOverride === "signup") {
+          if (accounts[username]) {
+            setAuthMessage("Ese usuario ya existe. Inicia sesion o usa otro nombre.");
+            return;
+          }
+          const nextAccounts = { ...accounts, [username]: { password: authPass, usedQuestionIds: [], createdAt: new Date().toISOString() } };
+          persistAccounts(nextAccounts);
+          localStorage.setItem(ACTIVE_USER_KEY, username);
+          setCurrentUser(username);
+          setAuthName("");
+          setAuthPass("");
+          setAuthMessage("");
+          return;
+        }
+        if (!accounts[username] || accounts[username].password !== authPass) {
+          setAuthMessage("Usuario o password incorrecto.");
+          return;
+        }
+        localStorage.setItem(ACTIVE_USER_KEY, username);
+        setCurrentUser(username);
+        setAuthName("");
+        setAuthPass("");
+        setAuthMessage("");
+      }
+
+      function logout() {
+        localStorage.removeItem(ACTIVE_USER_KEY);
+        setCurrentUser("");
+        setAmcatTest({ active: false, complete: false, index: 0, plan: [], results: [] });
+        setCurrent(null);
+      }
+
+      function unusedOnly(items) {
+        return items.filter(item => !usedIds.has(item.id));
+      }
+
+      function pool() {
+        const all = mode === "mixed"
+          ? Object.values(bank).flat()
+          : mode === "amcat"
+            ? ["shortq", "convq", "read", "shadow", "blank", "correct", "free"].flatMap(key => bank[key] || [])
+            : bank[mode];
+        const unseen = unusedOnly(all);
+        const filtered = unseen.filter(item => item.level === level);
+        return filtered.length ? filtered : unseen;
+      }
+
+      function secondsFor(item) {
+        return item?.type === "shortq" ? 15 : item?.type === "convq" ? 12 : item?.type === "read" ? 40 : item?.type === "free" ? 60 : 45;
+      }
+
+      const sectionInfo = {
+        shortq: { part: "A", title: "Short questions", guide: "Escucharas una historia corta. Se evalua escucha activa, respuesta completa, gramatica basica y claridad de pronunciacion." },
+        convq: { part: "B", title: "Conversation", guide: "Escucharas una situacion y un dialogo. Se evalua comprension del dialogo, respuesta especifica, estructura y gramatica." },
+        read: { part: "C", title: "Read & speak", guide: "Lee el texto en voz alta. Se evalua fluidez, pronunciacion, ritmo, ausencia de pausas largas y claridad." },
+        shadow: { part: "D", title: "Listen & repeat", guide: "Escucha y repite lo mas parecido posible. Se evalua pronunciacion, escucha activa, stress, ritmo y palabras omitidas." },
+        blank: { part: "E", title: "Fill in the blanks", guide: "Completa la palabra faltante y di la oracion completa. Se evalua vocabulario contextual, gramatica y fluidez." },
+        correct: { part: "F", title: "Complete/correct sentence", guide: "Corrige la frase con estructura correcta. Se evalua principalmente gramatica, estructura y claridad." },
+        free: { part: "G", title: "Free speech", guide: "Responde con idea, razon y ejemplo. Se evalua fluidez, estructura, gramatica, pronunciacion y vocabulario." }
+      };
+
+      function buildAmcatPlan() {
+        const counts = { shortq: 3, convq: 3, read: 2, shadow: 3, blank: 5, correct: 5, free: 2 };
+        return Object.entries(counts).flatMap(([type, count]) => {
+          const unused = unusedOnly(bank[type] || []);
+          const preferred = unused.filter(item => item.level === level);
+          const source = preferred.length >= count ? preferred : unused;
+          return source.slice(0, count).map((item, index) => ({ ...sectionInfo[type], item, type, q: index + 1, count }));
+        });
+      }
+
+      function startFullAmcat() {
+        const plan = buildAmcatPlan();
+        const requiredCount = 20;
+        if (plan.length < requiredCount) {
+          setFeedback([
+            { type: "bad", text: "No quedan suficientes preguntas nuevas para una prueba AMCAT completa con este usuario." },
+            { type: "warn", text: `Disponibles: ${plan.length}/${requiredCount}. Crea otro usuario o agrega mas preguntas al banco.` }
+          ]);
+          return;
+        }
+        const first = plan[0];
+        markQuestionsUsed(plan.map(slot => slot.item));
+        setAmcatTest({ active: true, complete: false, index: 0, plan, results: [] });
+        setCurrent(first.item);
+        setAnswer("");
+        setScore(0);
+        setTime(secondsFor(first.item));
+        setFeedback([
+          { type: "warn", text: `Part ${first.part}: ${first.title}` },
+          { type: "", text: first.guide },
+          { type: "", text: `Pregunta ${first.q} de ${first.count}. Presiona Escuchar, graba tu respuesta y luego Enviar y continuar.` }
+        ]);
+      }
+
+      function englishLevel(avg) {
+        if (avg >= 82) return "B2";
+        if (avg >= 64) return "B1";
+        return "A2";
+      }
+
+      function passStatus(avg, results) {
+        const attempted = results.filter(r => r.score > 0).length;
+        return avg >= 68 && attempted >= Math.ceil(results.length * .85) ? "PASO" : "NO PASO";
+      }
+
+      function newRound() {
+        if (mode === "amcat" && amcatTest.active) return;
+        const list = pool();
+        if (!list.length) {
+          setCurrent(null);
+          setAnswer("");
+          setScore(0);
+          setFeedback([
+            { type: "bad", text: "No quedan preguntas nuevas para este modo con el usuario actual." },
+            { type: "warn", text: "Regla activa: una pregunta usada nunca se repite para el mismo usuario." }
+          ]);
+          return;
+        }
+        const item = list[Math.floor(Math.random() * list.length)];
+        markQuestionsUsed([item]);
+        setCurrent(item);
+        setAnswer("");
+        setFeedback([{ type: "", text: "Listo para tu intento. Escucha, graba y revisa." }]);
+        setScore(0);
+        setTime(secondsFor(item));
+        setStats(s => ({ ...s, rounds: s.rounds + 1 }));
+      }
+
+      useEffect(() => {
+        if (mode === "amcat") {
+          setCurrent(null);
+          setAnswer("");
+          setScore(0);
+          setAmcatTest({ active: false, complete: false, index: 0, plan: [], results: [] });
+          setFeedback([{ type: "warn", text: "AMCAT Sequence listo. Presiona Iniciar prueba completa para hacer Part A hasta Part G." }]);
+          return;
+        }
+        newRound();
+      }, [mode, level]);
+
+      useEffect(() => {
+        if (flow !== "speaking") return;
+        const id = setInterval(() => setTime(t => Math.max(0, t - 1)), 1000);
+        return () => clearInterval(id);
+      }, [flow, current?.id]);
+
+      function countMatches(text, words) {
+        const said = normalize(text).split(" ");
+        return (words || []).filter(word => said.includes(normalize(word))).length;
+      }
+
+      function clampScore(value) {
+        return Math.max(0, Math.min(100, Math.round(value)));
+      }
+
+      function wordCount(text) {
+        return normalize(text).split(" ").filter(Boolean).length;
+      }
+
+      function fillerPenalty(text) {
+        const lowered = normalize(text);
+        const fillers = ["um", "uh", "er", "ah", "like", "you know", "mmm"];
+        return fillers.reduce((sum, filler) => sum + (lowered.includes(filler) ? 12 : 0), 0);
+      }
+
+      function hasSentenceShape(text) {
+        const words = normalize(text).split(" ").filter(Boolean);
+        return words.length >= 5 && /\b(am|is|are|was|were|do|does|did|have|has|had|can|will|would|should|need|want|ordered|works|starts|lost|filed|blocked|received)\b/i.test(text);
+      }
+
+      function grammarProxy(text) {
+        let value = hasSentenceShape(text) ? 78 : 48;
+        const commonIssues = [
+          /\bi am agree\b/i,
+          /\bshe don't\b/i,
+          /\bhe go\b/i,
+          /\bi no have\b/i,
+          /\bneed take\b/i,
+          /\bmore easier\b/i,
+          /\bdidn't went\b/i,
+          /\bhas not arrived already\b/i
+        ];
+        value -= commonIssues.filter(pattern => pattern.test(text)).length * 16;
+        if (/[.!?]$/.test(text.trim())) value += 5;
+        return clampScore(value);
+      }
+
+      function fluencyProxy(text, targetWords = 18) {
+        const words = wordCount(text);
+        const lengthScore = clampScore((words / targetWords) * 100);
+        return clampScore(lengthScore - fillerPenalty(text));
+      }
+
+      function vocabularyProxy(text) {
+        const words = normalize(text).split(" ").filter(Boolean);
+        const unique = new Set(words);
+        const ratio = words.length ? unique.size / words.length : 0;
+        return clampScore(45 + ratio * 45 + Math.min(words.length, 30));
+      }
+
+      function weightedScore(dimensions, weights) {
+        const entries = Object.entries(weights);
+        const total = entries.reduce((sum, item) => sum + item[1], 0);
+        return clampScore(entries.reduce((sum, [key, weight]) => sum + (dimensions[key] || 0) * weight, 0) / total);
+      }
+
+      function rubricLines(dimensions, weights) {
+        return Object.keys(weights).map(key => ({
+          type: dimensions[key] >= 80 ? "good" : dimensions[key] >= 60 ? "warn" : "bad",
+          text: `${dimensionLabels[key]}: ${dimensions[key]}% (${weights[key]}% del score)`
+        }));
+      }
+
+      function evaluateResponse(item, response) {
+        let nextScore = 0;
+        const lines = [];
+        const weights = rubricByType[item.type] || rubricByType.free;
+        let dimensions = {};
+        if (!response) {
+          dimensions = Object.fromEntries(Object.keys(weights).map(key => [key, 0]));
+          return { score: 0, dimensions, lines: [{ type: "bad", text: "No detecte respuesta. Graba de nuevo o escribe lo que dijiste." }, ...rubricLines(dimensions, weights)] };
+        }
+        if (item.type === "blank") {
+          const target = normalize(item.answer);
+          const hasWord = normalize(response).split(" ").includes(target);
+          dimensions = {
+            vocabulary: hasWord ? 100 : similarity(response, item.answer),
+            grammar: hasWord && hasSentenceShape(response) ? 88 : grammarProxy(response),
+            activeListening: hasWord ? 90 : 45,
+            fluency: fluencyProxy(response, 8)
+          };
+          nextScore = weightedScore(dimensions, weights);
+          lines.push({ type: hasWord ? "good" : "bad", text: hasWord ? `Correcto: ${item.answer}` : `Esperado: ${item.answer}` });
+          lines.push({ type: "warn", text: `Oracion completa: ${item.text.replace("____", item.answer)}` });
+        }
+        if (item.type === "shortq" || item.type === "convq") {
+          const modelMatch = similarity(response, item.answer);
+          const words = normalize(response).split(" ").filter(Boolean).length;
+          dimensions = {
+            activeListening: modelMatch,
+            structure: words >= 5 ? 86 : 35,
+            grammar: grammarProxy(response),
+            pronunciation: clampScore(modelMatch * .65 + fluencyProxy(response, 8) * .35)
+          };
+          if (words < 5) dimensions.structure = Math.min(dimensions.structure, 35);
+          nextScore = weightedScore(dimensions, weights);
+          lines.push({ type: nextScore >= 78 ? "good" : nextScore >= 55 ? "warn" : "bad", text: `Modelo: ${item.answer}` });
+          lines.push({ type: "warn", text: words < 5 ? "En este formato debes responder en forma de oracion, no con una sola palabra." : item.hint });
+        }
+        if (item.type === "correct") {
+          const modelMatch = similarity(response, item.answer);
+          dimensions = {
+            grammar: modelMatch,
+            structure: hasSentenceShape(response) ? 86 : 45,
+            fluency: fluencyProxy(response, 8),
+            pronunciation: clampScore(modelMatch * .55 + fluencyProxy(response, 8) * .45)
+          };
+          nextScore = weightedScore(dimensions, weights);
+          lines.push({ type: nextScore >= 82 ? "good" : nextScore >= 55 ? "warn" : "bad", text: `Correcta: ${item.answer}` });
+          lines.push({ type: "warn", text: item.hint });
+        }
+        if (item.type === "shadow") {
+          const base = similarity(response, item.answer);
+          const stress = Math.round((countMatches(response, item.stress) / Math.max(1, item.stress.length)) * 100);
+          const wordGap = Math.abs(normalize(response).split(" ").length - normalize(item.answer).split(" ").length);
+          const rhythm = Math.max(0, 100 - wordGap * 12);
+          dimensions = {
+            pronunciation: clampScore(base * .55 + stress * .25 + rhythm * .20),
+            activeListening: base,
+            fluency: rhythm
+          };
+          nextScore = weightedScore(dimensions, weights);
+          lines.push({ type: nextScore >= 86 ? "good" : nextScore >= 65 ? "warn" : "bad", text: `Precision shadowing: ${nextScore}%. Texto ${base}%, stress ${stress}%, ritmo ${rhythm}%.` });
+          lines.push({ type: "warn", text: `Stress: ${item.stress.join(", ")}` });
+          lines.push({ type: "warn", text: `Linking: ${item.linking.join(" | ")}` });
+          lines.push({ type: "warn", text: `Sounds: ${item.sounds.join(" | ")}` });
+        }
+        if (item.type === "read") {
+          const base = similarity(response, item.answer);
+          const wordGap = Math.abs(normalize(response).split(" ").length - normalize(item.answer).split(" ").length);
+          const rhythm = Math.max(0, 100 - wordGap * 10);
+          dimensions = {
+            pronunciation: clampScore(base - wordGap * 4),
+            fluency: clampScore(rhythm - fillerPenalty(response)),
+            activeListening: base,
+            grammar: grammarProxy(response)
+          };
+          nextScore = weightedScore(dimensions, weights);
+          lines.push({ type: nextScore >= 86 ? "good" : nextScore >= 65 ? "warn" : "bad", text: `Read & speak precision: ${nextScore}%. Modelo: ${item.answer}` });
+          lines.push({ type: "warn", text: item.hint });
+        }
+        if (item.type === "free") {
+          const words = normalize(response).split(" ").filter(Boolean).length;
+          const hasReason = /\b(because|since|for example|for instance|so|therefore|first|second|also)\b/i.test(response);
+          dimensions = {
+            fluency: fluencyProxy(response, 38),
+            structure: clampScore((words >= 28 ? 70 : words * 2) + (hasReason ? 25 : 0)),
+            grammar: grammarProxy(response),
+            pronunciation: fluencyProxy(response, 30),
+            vocabulary: vocabularyProxy(response)
+          };
+          nextScore = weightedScore(dimensions, weights);
+          lines.push({ type: words >= 28 ? "good" : words >= 14 ? "warn" : "bad", text: `Usaste ${words} palabras. Busca 30 a 45 palabras con idea, razon y ejemplo.` });
+          lines.push({ type: "warn", text: item.hint });
+        }
+        return { score: nextScore, dimensions, lines: [...lines, ...rubricLines(dimensions, weights)] };
+      }
+
+      function review() {
+        if (!current) return;
+        const result = evaluateResponse(current, answer.trim());
+        const nextScore = result.score;
+        setScore(nextScore);
+        setFeedback(result.lines);
+        setStats(s => nextScore >= 82 ? { rounds: s.rounds, wins: s.wins + 1, streak: s.streak + 1 } : { ...s, streak: 0 });
+      }
+
+      function submitAmcatAnswer() {
+        if (!amcatTest.active || amcatTest.complete || !current) return;
+        const slot = amcatTest.plan[amcatTest.index];
+        const result = evaluateResponse(current, answer.trim());
+        const saved = [...amcatTest.results, {
+          part: slot.part,
+          title: slot.title,
+          type: current.type,
+          score: result.score,
+          dimensions: result.dimensions,
+          answer: answer.trim()
+        }];
+        setScore(result.score);
+        setStats(s => result.score >= 82 ? { rounds: s.rounds + 1, wins: s.wins + 1, streak: s.streak + 1 } : { rounds: s.rounds + 1, wins: s.wins, streak: 0 });
+
+        const nextIndex = amcatTest.index + 1;
+        if (nextIndex >= amcatTest.plan.length) {
+          const avg = Math.round(saved.reduce((sum, item) => sum + item.score, 0) / saved.length);
+          const levelName = englishLevel(avg);
+          const statusName = passStatus(avg, saved);
+          setAmcatTest({ ...amcatTest, active: false, complete: true, results: saved, index: nextIndex });
+          setCurrent(null);
+          setAnswer("");
+          setTime(0);
+          setFeedback([
+            { type: statusName === "PASO" ? "good" : "bad", text: `Resultado final: ${statusName}` },
+            { type: "warn", text: `Promedio: ${avg}%. Nivel estimado: ${levelName}.` },
+            { type: "", text: levelName === "B2" ? "Puedes responder con buena estructura y claridad. Enfocate en sonar mas natural y consistente." : levelName === "B1" ? "Tienes base funcional. Mejora velocidad, oraciones completas y precision gramatical." : "Necesitas reforzar estructura basica, pronunciacion clara y respuestas completas antes de intentar la prueba real." }
+          ]);
+          return;
+        }
+
+        const nextSlot = amcatTest.plan[nextIndex];
+        const sectionChanged = nextSlot.part !== slot.part;
+        setAmcatTest({ ...amcatTest, index: nextIndex, results: saved });
+        setCurrent(nextSlot.item);
+        setAnswer("");
+        setTime(secondsFor(nextSlot.item));
+        setFeedback([
+          ...result.lines,
+          { type: "good", text: `Guardado: Part ${slot.part}, pregunta ${slot.q}/${slot.count}. Score: ${result.score}%.` },
+          sectionChanged
+            ? { type: "warn", text: `Siguiente seccion: Part ${nextSlot.part} - ${nextSlot.title}. ${nextSlot.guide}` }
+            : { type: "", text: `Siguiente pregunta: ${nextSlot.q}/${nextSlot.count} en Part ${nextSlot.part}.` }
+        ]);
+      }
+
+      function renderPrompt() {
+        if (!current) return null;
+        if (current.type === "shortq" || current.type === "convq") {
+          const marker = current.type === "shortq" ? "Question:" : "Question:";
+          const idx = current.text.indexOf(marker);
+          const lead = idx >= 0 ? current.text.slice(0, idx).trim() : current.text;
+          const q = idx >= 0 ? current.text.slice(idx).trim() : "";
+          return e(React.Fragment, null,
+            e("div", { className: "mini" }, e("strong", null, current.type === "shortq" ? "Listen to the story" : "Listen to the situation"), lead),
+            e("div", { className: "sentence" }, q)
+          );
+        }
+        if (current.type === "blank") {
+          const parts = current.text.split("____");
+          return e("div", { className: "sentence" }, parts[0], e("span", { className: "blank" }), parts[1]);
+        }
+        if (current.type === "shadow") {
+          return e(React.Fragment, null,
+            e("div", { className: "sentence" }, current.text),
+            e("div", { className: "shadow-matrix" },
+              e("div", { className: "mini" }, e("strong", null, "Chunks"), current.hint),
+              e("div", { className: "mini" }, e("strong", null, "Stress"), current.stress.join(", ")),
+              e("div", { className: "mini" }, e("strong", null, "Linking"), current.linking.join(" | ")),
+              e("div", { className: "mini" }, e("strong", null, "Sounds"), current.sounds.join(" | "))
+            )
+          );
+        }
+        return e("div", { className: "sentence" }, current.text);
+      }
+
+      function resetCase(nextCase = caseId) {
+        const c = chatCases[nextCase];
+        setCaseId(nextCase);
+        setStep(0);
+        setChatInput("");
+        setChatScore(0);
+        setChatDecision("La IA decide si avanzar, repetir o pedir detalle.");
+        setChatLog([{ who: "customer", text: c.steps[0][0] }]);
+        speak(c.steps[0][0], accent, rate);
+      }
+
+      useEffect(() => { resetCase(caseId); }, []);
+
+      function evaluateChat(text, data) {
+        const said = normalize(text);
+        const required = data[1];
+        const hits = required.filter(pattern => new RegExp(`\\b(${pattern})\\b`, "i").test(said)).length;
+        const words = said.split(" ").filter(Boolean).length;
+        let value = Math.round(hits / required.length * 78);
+        if (words >= 18) value += 12;
+        if (/sorry|understand|apologize|help|assist/i.test(said)) value += 10;
+        return { score: Math.min(100, value), pass: hits >= Math.ceil(required.length * .67) && words >= 10 };
+      }
+
+      function sendChat() {
+        const text = chatInput.trim();
+        if (!text) {
+          setChatLog(log => [...log, { who: "coach", text: "No detecte respuesta. Graba o escribe tu respuesta antes de enviar." }]);
+          return;
+        }
+        const data = activeCase.steps[step];
+        const result = evaluateChat(text, data);
+        setChatScore(result.score);
+        setChatLog(log => [...log, { who: "agent", text }, { who: "coach", text: result.pass ? data[2] : data[3] }]);
+        setChatDecision(result.pass ? "Decision: avanzar al siguiente turno." : "Decision: no avanzar todavia. Repite con mas informacion.");
+        setChatInput("");
+        if (result.pass) {
+          const next = step + 1;
+          if (next >= activeCase.steps.length) {
+            setTimeout(() => setChatLog(log => [...log, { who: "coach", text: "Caso finalizado. Buen cierre: resolviste, confirmaste y mantuviste tono profesional." }]), 350);
+          } else {
+            setStep(next);
+            setTimeout(() => {
+              const customer = activeCase.steps[next][0];
+              setChatLog(log => [...log, { who: "customer", text: customer }]);
+              speak(customer, accent, rate);
+            }, 450);
+          }
+        }
+      }
+
+      const currentSlot = amcatTest.plan[amcatTest.index];
+      const finalAvg = amcatTest.results.length ? Math.round(amcatTest.results.reduce((sum, item) => sum + item.score, 0) / amcatTest.results.length) : 0;
+      const finalLevel = englishLevel(finalAvg);
+      const finalStatus = passStatus(finalAvg, amcatTest.results);
+      const sectionScores = amcatParts.map(part => {
+        const items = amcatTest.results.filter(item => item.part === part[0]);
+        const avg = items.length ? Math.round(items.reduce((sum, item) => sum + item.score, 0) / items.length) : 0;
+        return { part: part[0], title: part[1], avg, count: items.length };
+      });
+      const dimensionScores = Object.keys(dimensionLabels).map(key => {
+        const values = amcatTest.results.map(item => item.dimensions?.[key]).filter(value => typeof value === "number");
+        const avg = values.length ? Math.round(values.reduce((sum, value) => sum + value, 0) / values.length) : 0;
+        return { key, label: dimensionLabels[key], avg, count: values.length };
+      }).filter(item => item.count > 0);
+      const currentWeights = current ? (rubricByType[current.type] || rubricByType.free) : null;
+
+      if (!currentUser || !accounts[currentUser]) {
+        return e(React.Fragment, null,
+          e(ThreeScene),
+          e("div", { className: "auth-wrap" },
+            e("div", { className: "auth-card" },
+              e("div", { className: "brand" }, e("div", { className: "logo" }, "EN"), e("div", null, e("h1", null, "AMCAT Practice Lab"), e("small", null, "Pregunta usada, pregunta bloqueada"))),
+              e("p", null, "Crea una cuenta local o inicia sesion. Cada usuario guarda su historial y nunca recibe de nuevo una pregunta ya usada."),
+              e("div", { className: "field" }, e("label", null, "Usuario"), e("input", { value: authName, onChange: ev => setAuthName(ev.target.value), placeholder: "maycol" })),
+              e("div", { className: "field" }, e("label", null, "Password local"), e("input", { type: "password", value: authPass, onChange: ev => setAuthPass(ev.target.value), placeholder: "Solo se guarda en este navegador" })),
+              authMessage && e("div", { className: "line bad" }, authMessage),
+              e("div", { className: "auth-actions" },
+                e("button", { className: `btn ${authMode === "login" ? "primary" : ""}`, onClick: () => { setAuthMode("login"); handleAuth("login"); } }, "Iniciar sesion"),
+                e("button", { className: `btn ${authMode === "signup" ? "primary" : ""}`, onClick: () => { setAuthMode("signup"); handleAuth("signup"); } }, "Crear cuenta")
+              ),
+              e("p", { className: "small" }, "Nota: esta version usa localStorage para practicar. Para produccion en GitHub con varios dispositivos, despues se puede conectar a Firebase, Supabase o una API propia.")
+            )
+          )
+        );
+      }
+
+      return e(React.Fragment, null,
+        e(ThreeScene),
+        e("div", { className: "shell" },
+          e("aside", { className: "rail" },
+            e("div", { className: "brand" }, e("div", { className: "logo" }, "EN"), e("div", null, e("h1", null, "SHL Style", e("br"), "English Lab"), e("small", null, "Candidate practice mode"))),
+            e("div", { className: "stats" },
+              e("div", { className: "stat" }, e("span", null, "Rondas"), e("strong", null, stats.rounds)),
+              e("div", { className: "stat" }, e("span", null, "Aciertos"), e("strong", null, stats.wins)),
+              e("div", { className: "stat" }, e("span", null, "Racha"), e("strong", null, stats.streak))
+            ),
+            e("div", { className: "user-chip" },
+              e("span", { className: "small" }, "Usuario activo"),
+              e("strong", null, currentUser),
+              e("span", { className: "small" }, `${userAccount?.usedQuestionIds?.length || 0} preguntas usadas bloqueadas`),
+              e("button", { className: "btn", onClick: logout }, "Cerrar sesion")
+            ),
+            e("div", { className: "source-card" },
+              e("strong", null, "AMCAT voice focus"),
+              e("span", { className: "small" }, "Fluency, pronunciation, active listening, vocabulary and grammar.")
+            ),
+            e("div", { className: "rail-group" }, modes.map(m => e("button", { key: m.id, className: `nav-btn ${mode === m.id ? "active" : ""}`, onClick: () => { setMode(m.id); setFlow("speaking"); } }, m.label))),
+            e("div", { className: "rail-note" }, "Banco ampliado inspirado en formatos publicos: vocabulary, grammar correction, listening/shadowing y service scenarios.")
+          ),
+          e("main", { className: "main" },
+            e("div", { className: "topbar" },
+              e("div", null, e("h2", null, flow === "speaking" ? activeMode.label : "Chat cases"), e("p", null, flow === "speaking" ? activeMode.sub : "Simulador HSL/SHL: la IA local decide si avanzas o repites.")),
+              e("div", { className: "tools" },
+                e("div", { className: "segmented" },
+                  e("button", { className: flow === "speaking" ? "active" : "", onClick: () => setFlow("speaking") }, "Speaking"),
+                  e("button", { className: flow === "chat" ? "active" : "", onClick: () => setFlow("chat") }, "Chat cases")
+                ),
+                flow === "speaking" && e("select", { value: level, onChange: ev => setLevel(ev.target.value) }, e("option", { value: "easy" }, "Nivel facil"), e("option", { value: "medium" }, "Nivel medio"), e("option", { value: "hard" }, "Nivel dificil")),
+                e("select", { value: accent, onChange: ev => setAccent(ev.target.value) }, e("option", { value: "en-US" }, "Voz US"), e("option", { value: "en-GB" }, "Voz UK")),
+                flow === "speaking" && e("button", { className: "btn primary", onClick: mode === "amcat" ? startFullAmcat : newRound }, mode === "amcat" ? (amcatTest.active ? "Reiniciar AMCAT" : "Iniciar prueba completa") : "Nueva ronda")
+              )
+            ),
+            flow === "speaking" ? e("div", { className: "layout" },
+              e("section", { className: "card" },
+                e("div", { className: "card-head" },
+                  e("span", { className: "pill" }, mode === "amcat" && currentSlot ? `Part ${currentSlot.part}: ${currentSlot.title}` : current?.type || "AMCAT"),
+                  e("span", { className: "timer" }, time)
+                ),
+                e("div", { className: "prompt" },
+                  mode === "amcat" && !amcatTest.active && !amcatTest.complete
+                    ? e(React.Fragment, null,
+                        e("div", { className: "sentence" }, "Full AMCAT voice simulation"),
+                        e("div", { className: "hint" }, "Haras la prueba completa desde Part A hasta Part G. Al terminar cada seccion, la app te explicara como sera la siguiente. Al final recibiras pass/fail y nivel estimado A2, B1 o B2."),
+                        e("div", { className: "roadmap" }, amcatParts.map(p => e("div", { key: p[0], className: "part" }, e("b", null, `Part ${p[0]}`), e("span", null, p[1]), e("span", null, p[2]))))
+                      )
+                    : mode === "amcat" && amcatTest.complete
+                      ? e(React.Fragment, null,
+                          e("div", { className: "sentence" }, finalStatus === "PASO" ? "You passed the simulation" : "Keep training before the real test"),
+                          e("div", { className: "result-grid" },
+                            e("div", { className: "result-tile" }, e("span", null, "Resultado"), e("strong", null, finalStatus)),
+                            e("div", { className: "result-tile" }, e("span", null, "Promedio"), e("strong", null, `${finalAvg}%`)),
+                            e("div", { className: "result-tile" }, e("span", null, "Nivel estimado"), e("strong", null, finalLevel))
+                          ),
+                          e("div", { className: "rubric-list" }, dimensionScores.map(d =>
+                            e("div", { key: d.key, className: "rubric-row" },
+                              e("span", null, d.label),
+                              e("div", { className: "rubric-bar" }, e("div", { style: { width: `${d.avg}%` } })),
+                              e("b", null, `${d.avg}%`)
+                            )
+                          )),
+                          e("div", { className: "hint" }, finalLevel === "B2" ? "Tu respuesta es suficientemente clara para situaciones laborales. Practica naturalidad, stress y consistencia para subir el score." : finalLevel === "B1" ? "Tienes base funcional. Para pasar con mas seguridad, responde siempre en oraciones completas y mejora precision gramatical." : "Tu nivel estimado es basico. Enfocate en frases cortas correctas, pronunciacion clara y no quedarte en silencio.")
+                        )
+                      : e(React.Fragment, null, renderPrompt(), e("div", { className: "hint" }, current ? `${current.topic} | ${current.hint}` : ""))
+                ),
+                mode === "amcat" && !amcatTest.active && !amcatTest.complete
+                  ? e("div", { className: "actions" }, e("button", { className: "btn primary", onClick: startFullAmcat }, "Iniciar prueba completa"))
+                  : mode === "amcat" && amcatTest.complete
+                    ? e("div", { className: "actions" }, e("button", { className: "btn primary", onClick: startFullAmcat }, "Repetir AMCAT"), e("button", { className: "btn", onClick: () => { setMode("mixed"); setFlow("speaking"); } }, "Practicar areas debiles"))
+                    : e("div", { className: "actions" },
+                        e("button", { className: "btn", onClick: () => current && speak(current.type === "blank" ? current.text.replace("____", "blank") : current.text, accent, rate) }, "Escuchar"),
+                        e("button", { className: "btn primary", disabled: mic.recording, onClick: () => mic.start(setAnswer, current?.type === "free") }, "Grabar voz"),
+                        e("button", { className: "btn", disabled: !mic.recording, onClick: mic.stop }, "Detener"),
+                        e("button", { className: "btn", onClick: mode === "amcat" && amcatTest.active ? submitAmcatAnswer : review }, mode === "amcat" && amcatTest.active ? "Enviar y continuar" : "Revisar")
+                      ),
+                current && !(mode === "amcat" && amcatTest.complete) && e("div", { className: "answer" }, e("label", { className: "small" }, "Tu respuesta o transcripcion"), e("textarea", { value: answer, onChange: ev => setAnswer(ev.target.value), spellCheck: false })),
+                e("div", { className: "feedback" }, e("h3", null, "Feedback"), feedback.map((f, i) => e("div", { key: i, className: `line ${f.type}` }, f.text)))
+              ),
+              e("aside", { className: "side" },
+                mode === "amcat" && e("div", { className: "side-card" },
+                  e("h3", null, amcatTest.complete ? "Resultados por parte" : "AMCAT parts"),
+                  e("div", { className: "roadmap" }, (amcatTest.complete ? sectionScores : amcatParts.map(p => ({ part: p[0], title: p[1], avg: null, count: null, desc: p[2] }))).map(p =>
+                    e("div", { key: p.part, className: `part ${currentSlot?.part === p.part ? "active" : ""}` },
+                      e("b", null, `Part ${p.part}`),
+                      e("span", null, p.title),
+                      e("span", null, amcatTest.complete ? `${p.avg}% (${p.count} items)` : p.desc)
+                    )
+                  ))
+                ),
+                e("div", { className: "side-card" }, e("h3", null, "Enfoque"), e("div", { className: "chips" }, activeMode.chips.map(c => e("span", { key: c, className: "chip" }, c)))),
+                currentWeights && e("div", { className: "side-card" },
+                  e("h3", null, "Rubrica activa"),
+                  e("div", { className: "rubric-list" }, Object.entries(currentWeights).map(([key, value]) =>
+                    e("div", { key, className: "rubric-row" },
+                      e("span", null, dimensionLabels[key]),
+                      e("div", { className: "rubric-bar" }, e("div", { style: { width: `${value}%` } })),
+                      e("b", null, `${value}%`)
+                    )
+                  ))
+                ),
+                e("div", { className: "side-card" }, e("h3", null, "Score"), e("div", { className: "meter" }, e("div", { style: { width: `${score}%` } })), e("p", { className: "small" }, score ? `Score: ${score}%` : "Score: sin revisar"), e("label", { className: "small" }, "Velocidad"), e("input", { type: "range", min: ".65", max: "1.05", step: ".05", value: rate, onChange: ev => setRate(ev.target.value) }), e("p", { className: "small" }, status), e("button", { className: "btn", onClick: mic.ensureMic }, "Probar microfono")),
+                e("div", { className: "side-card" }, e("h3", null, "Drill"), e("p", { className: "small" }, mode === "blank" ? "Say the complete sentence, not only the missing word. Guess from grammar first, then meaning." : mode === "shadow" ? "Listen once, whisper once, record once. Match stress before speed." : "Use short complete sentences. Accuracy first, speed second."))
+              )
+            ) : e("div", { className: "layout" },
+              e("section", { className: "card chat" },
+                e("div", { className: "card-head" },
+                  e("div", null, e("strong", null, activeCase.title), e("div", { className: "small" }, activeCase.subtitle)),
+                  e("div", { className: "case-tabs" }, e("button", { className: `btn ${caseId === "card" ? "primary" : ""}`, onClick: () => resetCase("card") }, "Tarjeta"), e("button", { className: `btn ${caseId === "baggage" ? "primary" : ""}`, onClick: () => resetCase("baggage") }, "Equipaje"))
+                ),
+                e("div", { className: "log" }, chatLog.map((b, i) => e("div", { key: i, className: `bubble ${b.who}` }, b.text))),
+                e("div", { className: "answer" }, e("label", { className: "small" }, "Tu respuesta como agente"), e("textarea", { value: chatInput, onChange: ev => setChatInput(ev.target.value), spellCheck: false }), e("div", { className: "actions", style: { padding: 0, borderTop: 0, background: "transparent" } },
+                  e("button", { className: "btn", onClick: () => speak(activeCase.steps[step]?.[0] || "The case is complete.", accent, rate) }, "Escuchar cliente"),
+                  e("button", { className: "btn primary", disabled: mic.recording, onClick: () => mic.start(setChatInput, true) }, "Grabar respuesta"),
+                  e("button", { className: "btn", disabled: !mic.recording, onClick: mic.stop }, "Detener"),
+                  e("button", { className: "btn", onClick: sendChat }, "Enviar")
+                ))
+              ),
+              e("aside", { className: "side" },
+                e("div", { className: "side-card" }, e("h3", null, "Checklist HSL"), activeCase.checklist.map(x => e("div", { key: x, className: "line" }, x))),
+                e("div", { className: "side-card" }, e("h3", null, "Decision"), e("p", { className: "small" }, chatDecision), e("div", { className: "meter" }, e("div", { style: { width: `${chatScore}%` } })), e("p", { className: "small" }, `Score: ${chatScore || "sin enviar"}`), e("p", { className: "small" }, status)),
+                e("div", { className: "side-card" }, e("h3", null, "Frases utiles"), activeCase.phrases.map(x => e("div", { key: x, className: "line warn" }, x)))
+              )
+            )
+          )
+        )
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(e(App));
+  </script>
+</body>
+</html>

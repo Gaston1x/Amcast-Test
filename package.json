@@ -1,0 +1,9 @@
+{
+  "name": "amcat-shl-english-practice-lab",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "serve": "python -m http.server 8765 --bind 127.0.0.1",
+    "serve:outputs": "python -m http.server 8765 --bind 127.0.0.1 --directory outputs"
+  }
+}
