@@ -22,8 +22,14 @@ Then open:
 http://127.0.0.1:8765/
 ```
 
-If you are using the existing Codex server that points directly to `outputs`,
-open `http://127.0.0.1:8765/english-speaking-practice.html`.
+Published GitHub Pages URL:
+
+```text
+https://gaston1x.github.io/Amcast-Test/
+```
+
+The full app is available at the repository root through `index.html`, so it can
+open directly from GitHub Pages without command-line setup.
 
 ## Data Persistence
 
